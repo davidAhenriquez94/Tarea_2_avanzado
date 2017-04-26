@@ -10,10 +10,10 @@ pression = infile[:,1]
 velocity = infile[:,2]
 
 #Exact solution                                                                                                                                                                                                                              
-density_left = 1.0
-density_right = 0.1
-pressure_left = 1.0
-pressure_right = 0.1
+density_left = 1.0/0.1
+density_right = 1.0
+pressure_left = 1.0/(1.4*0.1)
+pressure_right = 1.0/1.4
 velocity_left = 0.0
 velocity_right = 0.0
 
@@ -69,11 +69,11 @@ x = np.linspace(0,1,N)
 
 fig = plt.figure()
 ax = plt.axes()
-ax.set_xlabel("x")
-ax.set_ylabel("Pressure")
+ax.set_xlabel("x/L")
+ax.set_ylabel("Pressure (p/gamma*p_r)")
 ax.set_title("P vs x")
-plt.plot(x,pression,'-o',color= "red", label = "Lax-Wendroff ")
-plt.plot(z,y_pressure,label = "Exact solution")
+plt.plot(x,pression,'-o',color= "red", label = "Lax-Wendroff Solution")
+plt.plot(z,y_pressure,label = "Analytical Solution")
 plt.plot(())
 ax.legend()
 filename = 'pressure' 
@@ -82,23 +82,23 @@ plt.close()
 
 fig = plt.figure()
 ax = plt.axes()
-ax.set_xlabel("x")
-ax.set_ylabel("Density")
+ax.set_xlabel("x/L")
+ax.set_ylabel("density (d/d_r)")
 ax.set_title("D vs x")
-plt.plot(x,density,'-o',color= "red",label = "Lax-Wendroff")
-plt.plot(z,y_density,label = "Exact solution")
+plt.plot(x,density,'-o',color= "red",label = "Lax-Wendroff Solution")
+plt.plot(z,y_density,label = "Analytical Solution")
 ax.legend()
-filename = 'Density'
+filename = 'density'
 plt.savefig(filename + '.pdf',format = 'pdf')
 plt.close()
 
 fig = plt.figure()
 ax = plt.axes()
-ax.set_xlabel("x")
-ax.set_ylabel("Velocity")
+ax.set_xlabel("x/L")
+ax.set_ylabel("Velocity (v/a_r)")
 ax.set_title("V vs x")
-plt.plot(x,velocity,'-o',color= "red",label = "Lax-Wendroff")
-plt.plot(z,y_velocity,label = "Exact solution")
+plt.plot(x,velocity,'-o',color= "red",label = "Lax-Wendroff Solution")
+plt.plot(z,y_velocity,label = "Analytical Solution")
 ax.legend()
 filename = 'velocity'
 plt.savefig(filename + '.pdf',format = 'pdf')
