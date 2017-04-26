@@ -86,7 +86,7 @@ void Lax_Wendroff(float* w1, float* w2, float* w3){
   float w_medios_3_p = 0;
   
   int n = 1;
-  while( n < 5850 ){
+  while( n < 6150 ){
     
     float dt = time_step_calculator(0.1,w1,w2,w3,dx); 
 
