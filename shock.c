@@ -11,7 +11,6 @@ float time_step_calculator(float cfl,float* w1, float* w2, float* w3,float dx);
 
 int N = 1000;
 float dx  = 1.0/1000;
-float dt = 0.00005;
 
 int main(void){
   float* w_1 = malloc((N+1)*sizeof(float));
@@ -87,10 +86,9 @@ void Lax_Wendroff(float* w1, float* w2, float* w3){
   float w_medios_3_p = 0;
   
   int n = 1;
-  while( n < 3500 ){
+  while( n < 5850 ){
     
-    // float dt = time_step_calculator(0.9,w1,w2,w3,dx);
-    //printf("%f\n",dt); 
+    float dt = time_step_calculator(0.1,w1,w2,w3,dx); 
 
     for(int j = 0; j<(N-1); j++ ){
       w_medios_1_p = ((w1[j]+w1[j+1])/2.0) - (1.0/2)*(dt/dx)*(F1(w1[j+1],w2[j+1],w3[j+1]) - F1(w1[j],w2[j],w3[j]));
