@@ -9,8 +9,9 @@ float F3(float w1, float w2, float w3);
 void Lax_Wendroff(float* w1, float* w2, float* w3);
 float time_step_calculator(float cfl,float* w1, float* w2, float* w3,float dx);
 
-int N = 100;
-float dx  = 1.0/100;
+int N = 1000;
+float dx  = 1.0/1000;
+float dt = 0.00005;
 
 int main(void){
   float* w_1 = malloc((N+1)*sizeof(float));
@@ -20,14 +21,14 @@ int main(void){
 
   for(int i = 0; i<(N+1); i++){
     if(i<(N/2+1)){
-      w_1[i]  = 1;
-      w_2[i]  = 0;
-      w_3[i]  = energy(1.0,1.0,0);
+      w_1[i]  = 1.0;
+      w_2[i]  = 0.0;
+      w_3[i]  = energy(1.0,1.0,0.0);
     }
     else{
       w_1[i] = 0.1;
-      w_2[i]  = 0;
-      w_3[i]  = energy(0.1,0.1,0);
+      w_2[i]  = 0.0;
+      w_3[i]  = energy(0.1,0.1,0.0);
     }
   }
 
@@ -44,17 +45,17 @@ int main(void){
 }
 
 float energy(float pressure, float density, float velocity){
-  return ((3.0/2)*pressure + (density/2)*velocity*velocity);
+  return ((3.0/2)*pressure + (density/2.0)*velocity*velocity);
 }
 
 float F1(float w1, float w2, float w3){
   return w2;
 }
 float F2(float w1, float w2, float w3){
-  return ((w2*w2)/w1) + (2.0/3)*(w1 - ((w3*w2)/w1));
+  return ((w2*w2)/w1) + (2.0/3)*(w3 - ((w2*w2)/(2.0*w1)));
 }    
 float F3(float w1, float w2, float w3){
-  return (w3 + (2.0/3)*(w1 - ((w3*w2)/w1)))*(w2/w1);
+  return (w3 + (2.0/3)*(w3 - ((w2*w2)/(2.0*w1))))*(w2/w1);
 }
 float max_calculator(float *arr){
   float max = arr[0];
@@ -86,19 +87,20 @@ void Lax_Wendroff(float* w1, float* w2, float* w3){
   float w_medios_3_p = 0;
   
   int n = 1;
-  while( n < 45000 ){
+  while( n < 3500 ){
     
-    for(int j = 0; j<(N-1); j++ ){
-    float dt = time_step_calculator(0.001,w1,w2,w3,dx);
+    // float dt = time_step_calculator(0.9,w1,w2,w3,dx);
+    //printf("%f\n",dt); 
 
-      w_medios_1_p = (w1[j]+w1[j+1])/2 - (1.0/2)*(dt/dx)*(F1(w1[j+1],w2[j+1],w3[j+1]) - F1(w1[j],w2[j],w3[j]));
-      w_medios_1_f = (w1[j+1]+w1[j+2])/2 - (1.0/2)*(dt/dx)*(F1(w1[j+2],w2[j+2],w3[j+2]) - F1(w1[j+1],w2[j+1],w3[j+1]));
+    for(int j = 0; j<(N-1); j++ ){
+      w_medios_1_p = ((w1[j]+w1[j+1])/2.0) - (1.0/2)*(dt/dx)*(F1(w1[j+1],w2[j+1],w3[j+1]) - F1(w1[j],w2[j],w3[j]));
+      w_medios_1_f = ((w1[j+1]+w1[j+2])/2.0) - (1.0/2)*(dt/dx)*(F1(w1[j+2],w2[j+2],w3[j+2]) - F1(w1[j+1],w2[j+1],w3[j+1]));
       
-      w_medios_2_p = (w2[j]+w2[j+1])/2 - (1.0/2)*(dt/dx)*(F2(w1[j+1],w2[j+1],w3[j+1]) - F2(w1[j],w2[j],w3[j]));
-      w_medios_2_f = (w2[j+1]+w2[j+2])/2 - (1.0/2)*(dt/dx)*(F2(w1[j+2],w2[j+2],w3[j+2]) - F2(w1[j+1],w2[j+1],w3[j+1]));
+      w_medios_2_p = ((w2[j]+w2[j+1])/2.0) - (1.0/2)*(dt/dx)*(F2(w1[j+1],w2[j+1],w3[j+1]) - F2(w1[j],w2[j],w3[j]));
+      w_medios_2_f = ((w2[j+1]+w2[j+2])/2.0) - (1.0/2)*(dt/dx)*(F2(w1[j+2],w2[j+2],w3[j+2]) - F2(w1[j+1],w2[j+1],w3[j+1]));
       
-      w_medios_3_p = (w3[j]+w3[j+1])/2 - (1.0/2)*(dt/dx)*(F3(w1[j+1],w2[j+1],w3[j+1]) - F3(w1[j],w2[j],w3[j]));
-      w_medios_3_f = (w3[j+1]+w3[j+2])/2 - (1.0/2)*(dt/dx)*(F3(w1[j+2],w2[j+2],w3[j+2]) - F3(w1[j+1],w2[j+1],w3[j+1]));
+      w_medios_3_p = ((w3[j]+w3[j+1])/2.0) - (1.0/2)*(dt/dx)*(F3(w1[j+1],w2[j+1],w3[j+1]) - F3(w1[j],w2[j],w3[j]));
+      w_medios_3_f = ((w3[j+1]+w3[j+2])/2.0) - (1.0/2)*(dt/dx)*(F3(w1[j+2],w2[j+2],w3[j+2]) - F3(w1[j+1],w2[j+1],w3[j+1]));
 
       temp_1[j] = w1[j+1] - (dt/dx)*(F1(w_medios_1_f,w_medios_2_f,w_medios_3_f) - F1(w_medios_1_p,w_medios_2_p,w_medios_3_p));
       temp_2[j]= w2[j+1] - (dt/dx)*(F2(w_medios_1_f,w_medios_2_f,w_medios_3_f) - F2(w_medios_1_p,w_medios_2_p,w_medios_3_p));
