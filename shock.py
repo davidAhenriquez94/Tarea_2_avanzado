@@ -51,7 +51,7 @@ def pressure_expansion_fan(x,t):
 def density_expansion_fan(x,t):
     return ((density_2-density_left)/(x2(t)-x1(t))*x + (density_left*x2(t)-density_2*x1(t))/(x2(t)-x1(t)))
 
-t = 0.175
+t = 0.25
 z1 = np.linspace(0,x1(t),25)
 z2 = np.linspace(x1(t),x2(t),25)
 z3  = np.linspace(x2(t),x3(t),25)
